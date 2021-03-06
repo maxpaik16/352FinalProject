@@ -33,6 +33,12 @@
 *.out
 *.app
 *.i*86
+
+# Other stuff
+*.DS_STORE
+*.idea
+*.vscode
+
 *.x86_64
 *.hex
 
