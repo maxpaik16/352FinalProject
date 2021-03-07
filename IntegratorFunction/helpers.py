@@ -1,3 +1,10 @@
+"""
+Contains helper functions for misc orbital calculations
+
+To use write:
+from helpers import *
+"""
+
 import numpy as np
 import math
 
@@ -9,8 +16,10 @@ def angle_wrap(a):
     b *= 2.*np.pi
     return(b)
 
-# Gives orbital period for orbit of semi-major axis "a" around a star (or any body being orbited)
 def orbital_period(a, GM_star):
+    """
+    Gives orbital period for orbit of semi-major axis "a" around a star (or any body being orbited)
+    """
     return 2*np.pi*np.sqrt(a**3/GM_star)
 
 # Removes horizontal jumps in plots of x and y

@@ -1,9 +1,13 @@
+"""
+Contains solve_ode function for general ODE solver
+
+To use write:
+from odesolver import *
+"""
+
 import ctypes
 from numpy.ctypeslib import ndpointer
 import numpy as np
-import matplotlib.pyplot as plt
-import numba
-import math
 
 #load our C library, it's as simple as that!
 lib = ctypes.CDLL("libode.so")
