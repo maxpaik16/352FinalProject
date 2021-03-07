@@ -1,6 +1,14 @@
 import numpy as np
 import math
 
+# Converts angle in radians into range (-pi,pi]
+def angle_wrap(a):
+    b = a/(2.*np.pi)
+    b -= np.floor(b)
+    b -= (b>0.5)
+    b *= 2.*np.pi
+    return(b)
+
 # Gives orbital period for orbit of semi-major axis "a" around a star (or any body being orbited)
 def orbital_period(a, GM_star):
     return 2*np.pi*np.sqrt(a**3/GM_star)

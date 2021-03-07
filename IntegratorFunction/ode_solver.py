@@ -1,5 +1,4 @@
 import ctypes
-from ctypes import *
 from numpy.ctypeslib import ndpointer
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,7 +21,7 @@ solve_ode_c.argtypes = [
     ctypes.c_int,
     ctypes.c_int,
     ndpointer(ctypes.c_double),
-    ctypes.CFUNCTYPE(None,c_double, POINTER(c_double), POINTER(c_double), POINTER(c_double))
+    ctypes.CFUNCTYPE(None,ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double))
 ]
 
 #In order to "hide" from the end user the C "guts" of the library, 
@@ -51,7 +50,7 @@ def solve_ode(fun, t_span, nsteps, y0, method = "RK4", args = None ):
         fun_c = fun.ctypes
     else:
         #otherwise, we need to wrap the python function into CFUNCTYPE
-        FUNCTYPE = CFUNCTYPE(None,c_double, POINTER(c_double), POINTER(c_double), POINTER(c_double))
+        FUNCTYPE = ctypes.CFUNCTYPE(None,ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double))
         #create a C-compatible function pointer
         fun_c = FUNCTYPE(fun)
     #compute preliminaries to call the C function library
