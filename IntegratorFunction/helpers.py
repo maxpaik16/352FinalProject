@@ -130,11 +130,8 @@ def xy_to_ellipse(x,Vx,y,Vy):
     
     return a,e,theta,thetaE
 
-"""
-
 # Converts from ellipital orbit parameters to 2D orbit parameters
-def ellipse_to_xy(a, e, theta, theta_E):
-    GM_star = 4*np.pi**2
+def old_ellipse_to_xy(a, e, theta, theta_E, GM_star):
     r = a*(1-e**2) / (1 + e*np.cos(theta - theta_E))
     u = -GM_star/(2*a)
     h = np.sqrt(GM_star*a*(1-e**2))
@@ -147,7 +144,7 @@ def ellipse_to_xy(a, e, theta, theta_E):
     return x, v_x, y, v_y
 
 # Converts from 2D orbit parameters to ellipital orbit parameters
-def xy_to_ellipse(x, v_x, y, v_y, GM_star):
+def old_xy_to_ellipse(x, v_x, y, v_y, GM_star):
     r = np.sqrt(x**2 + y**2)
     v_squared = v_x**2 + v_y**2
     u = v_squared/2 - GM_star/r
@@ -170,5 +167,3 @@ def xy_to_ellipse(x, v_x, y, v_y, GM_star):
     if(theta_E < -np.pi): theta_E = theta_E + 2*np.pi
     if(e == 0): theta_E = 0
     return a, e, theta, theta_E
-
-"""
