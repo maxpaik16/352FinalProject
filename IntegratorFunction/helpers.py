@@ -37,6 +37,7 @@ def ellipse_to_xy(a,e,theta,thetaE):
     
     Returns x,Vx,y,Vy
     """
+
     # radius using angle theta
     r = a * (1 - e**2) / (1 + e * np.cos(theta - thetaE))
     
@@ -53,7 +54,13 @@ def ellipse_to_xy(a,e,theta,thetaE):
     # buff = alpha - theta
     # when the radial velocity is positive (the planet goes from its periapse to apoapse = sin(theta-theta_E) > 0)
     # alpha - theta should be less then pi/2
-    buff_sin = h / (r * V)
+    buff_sin = np.array(h / (r * V))
+    #print(buff_sin)
+    #print(type(h))
+    #print(type(r))
+    #print(type(V))
+    #print(type(buff_sin))
+    #print(type(buff_sin[buff_sin < 1]))
     buff_sin[buff_sin < -1.] = -1.
     buff_sin[buff_sin > 1.] = 1.
     #assert -1 <= buff_sin <= 1
