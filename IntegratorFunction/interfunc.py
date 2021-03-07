@@ -35,22 +35,25 @@ def func_n_body(t,sol,params,dydt):
     GM_S = params[0]
     r = np.sqrt(x**2 + y**2)
 
-    #Jupiter
-    GM_J = params[1]
-    r_J = params[2]
-    period_J = params[3]
-    theta_J = 2*np.pi*t/period_J
-    x_J = r_J*np.cos(theta_J)
-    y_J = r_J*np.sin(theta_J)
-    x_diff = x - x_J
-    y_diff = y - y_J
-    r_diff = np.sqrt(x_diff**2 + y_diff**2)
-    
-    #Particle Output
+    #Initial Particle Output
     dydt[0] = v_x #dx/dt
-    dydt[1] = -GM_S/(r**3)*x - GM_J/(r_diff**3)*x_diff #dv_x/dt
+    dydt[1] = -GM_S/(r**3)*x #dv_x/dt
     dydt[2] = v_y #dy/dt
-    dydt[3] = -GM_S/(r**3)*y - GM_J/(r_diff**3)*y_diff #dv_y/dt
+    dydt[3] = -GM_S/(r**3)*y #dv_y/dt
+
+    #Adding on forces from each planet
+    numberOtherPlanets = params[1]
+    for i in range(0,numberOtherPlanets):
+        GM_p = params[3*i+2]
+        r_p = params[3*i+3]
+        period_p = params[3*i+4]
+        theta_p = 2*np.pi*t/period_p
+        x_p = r_p*np.cos(theta_p)
+        y_p = r_p*np.sin(theta_p)
+        x_diff = x - x_p
+        y_diff = y - y_p
+        r_diff = np.sqrt(x_diff**2 + y_diff**2)
+        dydt[1] = dydt[1] - GM_p/(r_diff**3)*x_diff #dv_x/dt
 
 @cfunc(c_sig)
 def func_2_body(t,sol,params,dydt):
