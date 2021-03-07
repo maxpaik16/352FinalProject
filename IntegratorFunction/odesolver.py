@@ -28,6 +28,8 @@ solve_ode_c.argtypes = [
     ctypes.CFUNCTYPE(None,ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double))
 ]
 
+#TODO: Add velocity verlet option
+
 #In order to "hide" from the end user the C "guts" of the library, 
 #let's create a python "wrapper function" for our ODE solver
 def solve_ode(fun, t_span, nsteps, y0, method = "RK4", args = None ):
