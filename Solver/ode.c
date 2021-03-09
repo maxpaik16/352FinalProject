@@ -164,17 +164,17 @@ void stepVelocityVerlet(double dt, double t, double a[], double anew[], int nvar
   int i;                      // counter for loop
 
   /* allocate memory using buf */
-  double *f = buf, *halfV = f+nvar;
+  double *f1 = buf, *f2 = f1 + nvar/2, *halfV = f1 + nvar;
   // to store two f at a time for each coordinate
   // half V
 
   // compute the velocity at t = 1/2
   // z[0] is initial x, z[1] is initial V
   // compute right-hand function at x0, t0
-  (*dxdt)(t, a, params, f);
+  (*dxdt)(t, a, params, f1);
 
   for(i=0; i<(nvar/2); i++){
-    halfV[i] = *(a + 2*i + 1) + 0.5 * f[i] * dt;
+    halfV[i] = *(a + 2*i + 1) + 0.5 * f1[i] * dt;
   }
     
   // x_n+1 = x_n + h * V_(n+1/2)
@@ -183,11 +183,11 @@ void stepVelocityVerlet(double dt, double t, double a[], double anew[], int nvar
   }
 
   // F(x_(n+1))
-  (*dxdt)(t + dt, anew, params, f+nvar/2);
+  (*dxdt)(t + dt, anew, params, f2);
 
   for(i=0; i<(nvar/2); i++){
     // V_n+1 = V_(n+1/2) + 0.5 * h * F(x_(n+1))
-    *(anew + 2*i + 1) = halfV[i] + 0.5 * dt * f[nvar/2+i];
+    *(anew + 2*i + 1) = halfV[i] + 0.5 * dt * f2[i];
   }
 
   /* for(k=0; k<number; k++){
