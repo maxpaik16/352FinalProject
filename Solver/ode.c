@@ -265,12 +265,16 @@ void stepYoshida4(double dt, double t, double a[], double anew[], int nvar,
     coeff_xV[3] = num0;
     coeff_xV[5] = coeff_xV[1];
 
-    // populate the initial array
+    // set the initial array
 
+    for (i = 0; i < nvar; i++) {
+        temp_xV[i] = a[i];
+    }
+    /*
     for (i = 0; i < (nvar / 2); i++) {
         temp_xV[2 * i] = a[2 * i];
         temp_xV[2 * i + 1] = a[2 * i + 1];
-    }
+    } */
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < (nvar / 2); i++) {
@@ -289,8 +293,6 @@ void stepYoshida4(double dt, double t, double a[], double anew[], int nvar,
         anew[2 * i] = temp_xV[2 * i] + coeff_xV[6] * temp_xV[2 * i + 1] * dt;
         anew[2 * i + 1] = temp_xV[2 * i + 1];
     }
-
-    //DONT forget to skip one value of f
 
     /* code for one pair of x and V to refer to
 
