@@ -31,4 +31,13 @@ interfunc.py contains right hand side equations for our integrators to solve
   
   model.py is an attempt at a neural network to predict stability
   
+### Places to look for plots
+
+IntegratorFunction/func_testing.ipynb
+
+Driver/stabilities.png
+
+Solver/ode_solver_test.ipynb
+
+Solver/ode_solver_test_leapfrog.ipynb
   
