@@ -15,17 +15,17 @@ helpers.py contains helper functions used in other scripts (indexing or coordina
 
 interfunc.py contains right hand side equations for our integrators to solve
 
-in Solver
+### in Solver
 
   both Jupyter Notebooks contain code that we used to test our integrators.
   
-in IntegratorFunction
+### in IntegratorFunction
 
   func_testing.ipynb contains code used to test our Python scripts
   
-in Driver
+### in Driver
 
-  \tsimulate.py is the script use to simulate many different systems
+  simulate.py is the script use to simulate many different systems
   
   results.py plots the results of simulate.py
   
