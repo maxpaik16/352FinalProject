@@ -203,79 +203,66 @@ void stepLeapFrog(double dt, double t, double a[], double anew[], int nvar,
 void stepVelocityVerlet(double dt, double t, double a[], double anew[], int nvar,
     double params[], double* buf,
     void (*dxdt)(double t, double a[], double params[], double derivs[])) {
-    int i;                      // counter for loop
+    int i;
 
-    /* allocate memory using buf */
+    /* f1 and f2 saves the values of dVdt */
+    /* halfV are velocities at 0.5*dt */
     double* f1 = buf, * f2 = f1 + nvar, * halfV = f2 + nvar;
-    // to store two f at a time for each coordinate
-    // half V
 
-    // compute the velocity at t = 1/2
-    // z[0] is initial x, z[1] is initial V
-    // compute right-hand function at x0, t0
     (*dxdt)(t, a, params, f1);
 
     for (i = 0; i < (nvar / 2); i++) {
         halfV[i] = *(a + 2 * i + 1) + 0.5 * f1[2 * i + 1] * dt;
     }
 
-    // x_n+1 = x_n + h * V_(n+1/2)
+    /* compute new position */
     for (i = 0; i < (nvar / 2); i++) {
         *(anew + 2 * i) = *(a + 2 * i) + halfV[i] * dt;
     }
 
-    // F(x_(n+1))
     (*dxdt)(t + dt, anew, params, f2);
 
+    /* compute new velocity */
     for (i = 0; i < (nvar / 2); i++) {
-        // V_n+1 = V_(n+1/2) + 0.5 * h * F(x_(n+1))
         *(anew + 2 * i + 1) = halfV[i] + 0.5 * dt * f2[2 * i + 1];
     }
-
-    /* for(k=0; k<number; k++){
-      f[k] = f[number + k];
-    } */
 }
 
 void stepYoshida4(double dt, double t, double a[], double anew[], int nvar,
     double params[], double* buf,
     void (*dxdt)(double t, double a[], double params[], double derivs[])) {
-    int i, k;          // counter for loop
+    int i, k;
 
-    /* allocate memory using buf */
-    /* rewrite each time f */
-    /* array of temporary values for nvar */
-    /* coeff include 4 values for x and 3 values for V, order in x,V */
+    /* f stores the values of dVdt */
+    /* temp_xV stores temporary values for x,V */
+    /* coeff_xV includes 4 values for x and 3 values for V, order in x,V */
 
     double* f = buf, * temp_xV = f + nvar, * coeff_xV = temp_xV + nvar;
 
-    // a[0] is initial x, a[1] is initial V
-
-    // set coefficients
+    /* set coefficients */
     const double num0 = -1.7024143839193153215916254;
     const double num1 = 1.3512071919596577718181152;
-    // c1, c2, c3, c4
+
+    /* c1, c2, c3, c4 coefficients for x */
     coeff_xV[0] = 0.5 * num1;
     coeff_xV[2] = 0.5 * (num0 + num1);
     coeff_xV[4] = coeff_xV[2];
     coeff_xV[6] = coeff_xV[0];
 
-    // d1, d2, d3
+    /* d1, d2, d3 coefficients for V */
     coeff_xV[1] = num1;
     coeff_xV[3] = num0;
     coeff_xV[5] = coeff_xV[1];
 
-    // set the initial array
+    /* set temporary variables to initial conditions*/
 
     for (i = 0; i < nvar; i++) {
         temp_xV[i] = a[i];
     }
-    /*
-    for (i = 0; i < (nvar / 2); i++) {
-        temp_xV[2 * i] = a[2 * i];
-        temp_xV[2 * i + 1] = a[2 * i + 1];
-    } */
 
+    /* take three Euler steps with different dt
+    assume that dxdt = V and dVdt is defined by the given function */
+    
     for (k = 0; k < 3; k++) {
         for (i = 0; i < (nvar / 2); i++) {
             temp_xV[2 * i] = temp_xV[2 * i] + coeff_xV[2 * k] * temp_xV[2 * i + 1] * dt;
@@ -288,30 +275,12 @@ void stepYoshida4(double dt, double t, double a[], double anew[], int nvar,
         }
     }
 
-    // compute at n+1
+    /* compute new values */
     for (i = 0; i < (nvar / 2); i++) {
         anew[2 * i] = temp_xV[2 * i] + coeff_xV[6] * temp_xV[2 * i + 1] * dt;
         anew[2 * i + 1] = temp_xV[2 * i + 1];
     }
-
-    /* code for one pair of x and V to refer to
-
-    temp_xV[0] = a[0], temp_xV[1] = a[1];
-
-    for(k=0; k<3; k++){
-      temp_xV[0] = temp_xV[0] + coeff_xV[2*k] * temp_xV[1] * dt;
-
-      (*dxdt)(t + coeff_xV[2*k] * dt, temp_xV, params, f);
-
-      temp_xV[1] = temp_xV[1] + coeff_xV[2*k + 1] * f[1] * dt;
-
-    }
-
-    anew[0] = temp_xV[0] + coeff_xV[6] * temp_xV[1] * dt;
-    anew[1] = temp_xV[1]; */
-
 }
-
 
 /**************************
 *
